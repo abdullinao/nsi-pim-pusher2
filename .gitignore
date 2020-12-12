@@ -23,6 +23,5 @@
 hs_err_pid*
 
 #prop file
-#*.properties
-#src/main/resources/config.properties
- 
+*.properties
+src/main/resources/config.properties
