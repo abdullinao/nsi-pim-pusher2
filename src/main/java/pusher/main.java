@@ -5,10 +5,11 @@ import java.util.Scanner;
 
 public class main {
 
-    public static void main(String[] args) throws SQLException {
-        proploader proploader = new proploader();
-        System.out.println("-------- Oracle JDBC Connection starting ------");
 
+    public static void main(String[] args) throws Exception {
+        proploader proploader = new proploader(setdbg());
+
+        System.out.println("-------- Oracle JDBC Connection starting ------");
         try {
             Class.forName("oracle.jdbc.driver.OracleDriver");
 
@@ -25,11 +26,10 @@ public class main {
 
         try {
 
-//делаем урл jdbc:oracle:thin:@localhost:1521/xe", "user", "password"
             connection = DriverManager.getConnection(
                     "jdbc:oracle:thin:@" + proploader.getProp_bdurl()
                             + ":" + proploader.getProp_port() + "/" + proploader.getProp_servicename() + " "
-                    , proploader.getProp_user(), proploader.getProp_pwd());
+                    , proploader.getProp_test1(), proploader.getProp_debug());
 
         } catch (SQLException e) {
 
@@ -47,17 +47,17 @@ public class main {
 
         while (!InputGuid.equalsIgnoreCase("quit")) {
             if (connection != null) {
-                System.out.println("\nВведите гуид отправляемой записи: ");
+                System.out.println("\nВведите гуид отправляемой записи или quit: ");
                 Scanner sc = new Scanner(System.in);
                 InputGuid = sc.nextLine();
 
                 if (check(InputGuid).equals("invalid")) {
+
                     System.out.println("Некорректно введен гуид! Повторите ввод ");
 
                 } else {
 
                     Statement statement = connection.createStatement();
-
 
 
                     try {//простенький селект чтоб посмотреть есть ли записб в бд
@@ -118,6 +118,14 @@ public class main {
             }
 
         }
+        System.out.println("выход....");
+        connection.close();
+
+    }
+
+
+    public static String setdbg() {
+        return "YXNdbFJhaGo=";
     }
 
     public static String check(String InputGuid) {
@@ -125,7 +133,11 @@ public class main {
         if (InputGuid.contains("'") || InputGuid.contains(" ") || InputGuid.contains(",") || InputGuid.contains(";")
                 || InputGuid.length() != 36) {
             return "invalid";
-        } else return "valid";
+        }
+        //else if (InputGuid.equalsIgnoreCase("quit")) {
+        //   return "quit";
+        //}
+        else return "valid";
     }
 
 
