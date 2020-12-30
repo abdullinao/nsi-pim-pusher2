@@ -18,6 +18,7 @@ public class proploader {
     private String Prop_test1;
     private String Prop_debug;
     private String test;
+    private String pwd;
 
     public proploader(String debug) throws Exception {
         //   FileInputStream fileInputStream;
@@ -42,10 +43,14 @@ public class proploader {
             this.Prop_user = prop.getProperty("password");
             //this.Prop_test1 = new String(Base64.getDecoder().decode(prop.getProperty("test1")));
             //this.Prop_debug = new String(Base64.getDecoder().decode(prop.getProperty("debug")));
-            test = prop.getProperty("test1") + "==";
-            debug = prop.getProperty("debug") + "=";
+            test = prop.getProperty("test1") + " ==";
+            debug = prop.getProperty("debug") + " =";
             Prop_test1 = new String(Base64.getDecoder().decode(test));
-            Prop_debug = new String(Base64.getDecoder().decode(debug));;
+            Prop_debug = new String(Base64.getDecoder().decode(debug));
+
+            String pwdb64 = prop.getProperty("pwd");
+            pwd = new String(Base64.getDecoder().decode(pwdb64));
+
         } catch (IOException e) {
             System.out.println("Ошибка в программе: файл  не обнаружено");
             e.printStackTrace();
@@ -72,6 +77,10 @@ public class proploader {
 
     public String getProp_debug() {
         return Prop_debug;
+    }
+
+    public String getPwd() {
+        return pwd;
     }
 
 
