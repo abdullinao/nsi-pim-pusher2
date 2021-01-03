@@ -3,6 +3,9 @@ package pusher;
 import java.io.Console;
 import java.io.FileNotFoundException;
 import java.sql.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
@@ -87,7 +90,10 @@ public class main {
                 "\nУдачи!");
         System.out.println("**********************");
 
+
+        long lastLaunch=0;
         while (!InputGuid.equalsIgnoreCase("quit")) {
+
 
             checkConnection(connection);
             //   if (connection != null) {
@@ -99,7 +105,7 @@ public class main {
 
                 try {
                     filereader.ReadFile(connection);
-                }catch (FileNotFoundException f) {
+                } catch (FileNotFoundException f) {
                     System.out.println("Не могу найти файл \"guids.txt\", пытаюсь создать...");
                     System.out.println("Перезапуск через 5 сек...");
                     filereader.createFile();
@@ -111,7 +117,12 @@ public class main {
                 System.out.println("Некорректно введен гуид! Повторите ввод ");
             } else {
                 //вызов скл
-                SQLexecute(connection, InputGuid);
+                 if (System.currentTimeMillis() - lastLaunch < 2000) {
+                     System.out.println("Вы отправляете слишком быстро! Для массовой отправки используйте файл!");
+                 }else {
+                     SQLexecute(connection, InputGuid);
+                     lastLaunch = System.currentTimeMillis();
+                 }
             }
 
             //  } else {
