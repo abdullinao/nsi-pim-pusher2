@@ -43,8 +43,8 @@ public class proploader {
             this.Prop_user = prop.getProperty("password");
             //this.Prop_test1 = new String(Base64.getDecoder().decode(prop.getProperty("test1")));
             //this.Prop_debug = new String(Base64.getDecoder().decode(prop.getProperty("debug")));
-            test = prop.getProperty("test1") + " ==";
-            debug = prop.getProperty("debug") + " =";
+            test = prop.getProperty("test1") + "==";
+            debug = prop.getProperty("debug") + "=";
             Prop_test1 = new String(Base64.getDecoder().decode(test));
             Prop_debug = new String(Base64.getDecoder().decode(debug));
 

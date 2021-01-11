@@ -90,45 +90,49 @@ public class main {
                 "\nУдачи!");
         System.out.println("**********************");
 
+        int ban = 0;
+        long lastLaunch = 0;
+        while (!InputGuid.equalsIgnoreCase("quit") && ban != 10) {
 
-        long lastLaunch=0;
-        while (!InputGuid.equalsIgnoreCase("quit")) {
+            if (ban ==9) {
+                System.out.println("Вы заблокированы из-за частоты отправок. Перезапустите программу.");
+                ban++;
+            } else {
+                checkConnection(connection);
+                //   if (connection != null) {
+                System.out.println("\nВведите гуид отправляемой записи или \"file\" или \"quit\": ");
+
+                InputGuid = sc.next();
+
+                if (InputGuid.equalsIgnoreCase("file")) {
+
+                    try {
+                        filereader.ReadFile(connection);
+                    } catch (FileNotFoundException f) {
+                        System.out.println("Не могу найти файл \"guids.txt\", пытаюсь создать...");
+                        System.out.println("Перезапуск через 5 сек...");
+                        filereader.createFile();
+                        TimeUnit.SECONDS.sleep(5);
+                    }
 
 
-            checkConnection(connection);
-            //   if (connection != null) {
-            System.out.println("\nВведите гуид отправляемой записи или \"file\" или \"quit\": ");
-
-            InputGuid = sc.nextLine();
-
-            if (InputGuid.equalsIgnoreCase("file")) {
-
-                try {
-                    filereader.ReadFile(connection);
-                } catch (FileNotFoundException f) {
-                    System.out.println("Не могу найти файл \"guids.txt\", пытаюсь создать...");
-                    System.out.println("Перезапуск через 5 сек...");
-                    filereader.createFile();
-                    TimeUnit.SECONDS.sleep(5);
+                } else if (check(InputGuid).equals("invalid")) {
+                    System.out.println("Некорректно введен гуид! Повторите ввод ");
+                } else {
+                    //вызов скл
+                    if (System.currentTimeMillis() - lastLaunch < 2000) {
+                        System.out.println("Вы отправляете слишком быстро! Для массовой отправки используйте файл!");
+                        ban++;
+                    } else {
+                        SQLexecute(connection, InputGuid);
+                        lastLaunch = System.currentTimeMillis();
+                    }
                 }
 
-
-            } else if (check(InputGuid).equals("invalid")) {
-                System.out.println("Некорректно введен гуид! Повторите ввод ");
-            } else {
-                //вызов скл
-                 if (System.currentTimeMillis() - lastLaunch < 2000) {
-                     System.out.println("Вы отправляете слишком быстро! Для массовой отправки используйте файл!");
-                 }else {
-                     SQLexecute(connection, InputGuid);
-                     lastLaunch = System.currentTimeMillis();
-                 }
+                //  } else {
+                //        System.out.println("Нет соединения с БД!");
+                //    }
             }
-
-            //  } else {
-            //        System.out.println("Нет соединения с БД!");
-            //    }
-
         }
         System.out.println("выход....");
         connection.close();
